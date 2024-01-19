@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["mongoose"],
+    serverComponentsExternalPackages: [
+      "mongoose",
+      "mongodb",
+      "mongodb-client-encryption",
+      "aws4",
+    ],
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
