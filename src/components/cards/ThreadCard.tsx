@@ -37,7 +37,7 @@ function ThreadCard({
   comments,
   isComment,
 }: ThreadCardProps) {
-  console.log("ThreadCard", { isComment, community });
+  console.log("community", community?.id, community?.name);
 
   return (
     <article

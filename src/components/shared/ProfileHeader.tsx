@@ -7,6 +7,7 @@ type ProfileHeaderProps = {
   username: string;
   image: string;
   bio: string;
+  type: "User" | "Community";
 };
 
 function ProfileHeader({
@@ -16,6 +17,7 @@ function ProfileHeader({
   image,
   name,
   username,
+  type,
 }: ProfileHeaderProps) {
   return (
     <div className="flex w-full flex-col justify-start">
