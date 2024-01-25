@@ -5,12 +5,19 @@ import { revalidatePath } from "next/cache";
 import { connectToDB } from "../mongoose";
 import { User, Thread, Community } from "../models";
 
-interface createThreadParams {
+type createThreadParams = {
   text: string;
   author: string;
   communityId: string | null;
   path: string;
-}
+};
+
+type addCommentToThreadParams = {
+  threadId: string;
+  commentText: string;
+  userId: string;
+  path: string;
+};
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   connectToDB();
@@ -203,12 +210,12 @@ export async function deleteThread(id: string, path: string): Promise<void> {
   }
 }
 
-export async function addCommentToThread(
-  threadId: string,
-  commentText: string,
-  userId: string,
-  path: string
-) {
+export async function addCommentToThread({
+  threadId,
+  commentText,
+  userId,
+  path,
+}: addCommentToThreadParams) {
   connectToDB();
 
   try {
