@@ -4,10 +4,17 @@ import { revalidatePath } from "next/cache";
 import { Thread, User } from "../models";
 import { connectToDB } from "../mongoose";
 
-type Params = {
+type createThreadParams = {
   text: string;
   author: string;
   communityId: string | null;
+  path: string;
+};
+
+type addCommentToThreadParams = {
+  threadId: string;
+  commentText: string;
+  userId: string;
   path: string;
 };
 
@@ -82,7 +89,7 @@ export async function createThread({
   author,
   communityId,
   path,
-}: Params) {
+}: createThreadParams) {
   try {
     connectToDB();
 
@@ -92,8 +99,6 @@ export async function createThread({
       community: null,
     });
 
-    console.log("createdThread", createdThread);
-
     await User.findByIdAndUpdate(author, {
       $push: { threads: createdThread._id },
     });
@@ -101,5 +106,38 @@ export async function createThread({
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Failed to create thread: ${error.message}`);
+  }
+}
+
+export async function addCommentToThread({
+  threadId,
+  commentText,
+  userId,
+  path,
+}: addCommentToThreadParams) {
+  connectToDB();
+
+  try {
+    const originalThread = await Thread.findById(threadId);
+
+    if (!originalThread) {
+      throw new Error("Thread not found");
+    }
+
+    const commentThread = new Thread({
+      text: commentText,
+      author: userId,
+      parentId: threadId,
+    });
+
+    const savedCommentThread = await commentThread.save();
+
+    originalThread.children.push(savedCommentThread._id);
+
+    await originalThread.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to add comment: ${error.message}`);
   }
 }
