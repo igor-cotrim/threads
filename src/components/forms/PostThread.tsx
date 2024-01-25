@@ -3,6 +3,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useOrganization } from "@clerk/nextjs";
 import { z } from "zod";
 
 import { createThread } from "@/lib/actions";
@@ -22,7 +23,9 @@ function PostThread({ userId }: { userId: string }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const form = useForm({
+  const { organization } = useOrganization();
+
+  const form = useForm<z.infer<typeof threadValidation>>({
     resolver: zodResolver(threadValidation),
     defaultValues: {
       thread: "",
@@ -34,7 +37,7 @@ function PostThread({ userId }: { userId: string }) {
     await createThread({
       text: values.thread,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
 
@@ -44,14 +47,14 @@ function PostThread({ userId }: { userId: string }) {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
         className="mt-10 flex flex-col justify-start gap-10"
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
           name="thread"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
+            <FormItem className="flex w-full flex-col gap-3">
               <FormLabel className="text-base-semibold text-light-2">
                 Content
               </FormLabel>

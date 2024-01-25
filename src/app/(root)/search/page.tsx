@@ -16,8 +16,8 @@ export default async function SearchPage() {
   const result = await fetchUsers({
     userId: user.id,
     searchString: "",
-    page: 1,
-    size: 25,
+    pageNumber: 1,
+    pageSize: 25,
   });
 
   return (
