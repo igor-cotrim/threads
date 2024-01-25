@@ -6,17 +6,16 @@
 // It's a good practice to verify webhooks. Above article shows why we should do it
 import { Webhook, WebhookRequiredHeaders } from "svix";
 import { headers } from "next/headers";
-
 import { IncomingHttpHeaders } from "http";
-
 import { NextResponse } from "next/server";
-// import {
-//   addMemberToCommunity,
-//   createCommunity,
-//   deleteCommunity,
-//   removeUserFromCommunity,
-//   updateCommunityInfo,
-// } from "@/lib/actions/community.actions";
+
+import {
+  addMemberToCommunity,
+  createCommunity,
+  deleteCommunity,
+  removeUserFromCommunity,
+  updateCommunityInfo,
+} from "@/lib/actions";
 
 // Resource: https://clerk.com/docs/integration/webhooks#supported-events
 // Above document lists the supported events
